@@ -1,6 +1,8 @@
 description = "Create or update the project constitution from interactive or provided principle inputs, ensuring all dependent templates stay in sync."
 
 prompt = """
+ファイル生成やユーザーとのコミュニケーションはすべて日本語で行ってください。
+
 ---
 description: Create or update the project constitution from interactive or provided principle inputs, ensuring all dependent templates stay in sync.
 ---

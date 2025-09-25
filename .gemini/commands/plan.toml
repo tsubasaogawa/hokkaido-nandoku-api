@@ -1,6 +1,8 @@
 description = "Execute the implementation planning workflow using the plan template to generate design artifacts."
 
 prompt = """
+ファイル生成やユーザーとのコミュニケーションはすべて日本語で行ってください。
+
 ---
 description: Execute the implementation planning workflow using the plan template to generate design artifacts.
 ---

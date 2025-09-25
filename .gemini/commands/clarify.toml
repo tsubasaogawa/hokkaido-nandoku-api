@@ -1,6 +1,8 @@
 description = "Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec."
 
 prompt = """
+ファイル生成やユーザーとのコミュニケーションはすべて日本語で行ってください。
+
 ---
 description: Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec.
 ---
