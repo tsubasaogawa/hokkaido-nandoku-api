@@ -41,7 +41,7 @@ def get_sections():
         response = requests.get(API_URL, params=params, headers=HEADERS)
         response.raise_for_status()
         data = response.json()
-        return data["parse"]["sections"]
+        return data.get("parse", {}).get("sections", [])
     except requests.exceptions.RequestException as e:
         print(f"Error fetching sections: {e}")
         return []
@@ -60,7 +60,7 @@ def get_section_wikitext(section_index):
         response = requests.get(API_URL, params=params, headers=HEADERS)
         response.raise_for_status()
         data = response.json()
-        return data["parse"]["wikitext"]
+        return data.get("parse", {}).get("wikitext", "")
     except requests.exceptions.RequestException as e:
         print(f"Error fetching wikitext for section {section_index}: {e}")
         return ""
@@ -70,23 +70,34 @@ def main():
 
     sections = get_sections()
     if not sections:
-        return # セクションが取得できなければ終了
+        return
 
     excluded_sections = ["参考文献", "関連項目", "外部リンク"]
 
+    # Wikitextから地名と読みを抽出するための正規表現
+    # - `^*+` : 行頭の `*` (1回以上) にマッチ (入れ子リスト対応)
+    # - `\s*` : 空白文字
+    # - `(.+?)` : 地名部分 (非貪欲マッチ)
+    # - `\s*（` : `（`
+    # - `([^）]+)` : `）` 以外の文字 (読み)
+    # - `）` : `）`
+    line_pattern = re.compile(r"^\*+\s*(.+?)\s*（([^）]+)）")
+
     for section in sections:
-        # 地名リストが含まれるのはレベル2のセクション
         if section.get("level") == "2" and section.get("line") not in excluded_sections:
             wikitext = get_section_wikitext(section["index"])
             
-            # Wikitextから `* [[漢字]]（よみ）` のパターンを抽出
-            # `[[漢字|別表記]]` のようなパイプリンクにも対応
             for line in wikitext.splitlines():
-                match = re.match(r"^\*\s*\[\[([^|\]]+)(?:\|[^\]]+)?\]\]\s*（(.+?)）", line)
+                match = line_pattern.match(line)
                 if match:
-                    kanji = match.group(1).strip()
-                    # 読み仮名に含まれる注釈などを除去
-                    reading = re.sub(r'<ref.*?>.*?</ref>', '', match.group(2).strip())
+                    # 地名部分からWikiリンクのマークアップを除去
+                    kanji_raw = match.group(1).strip()
+                    kanji = re.sub(r"\[\[(?:[^|\]]+\|)?([^\]]+)\]\]", r"\1", kanji_raw)
+
+                    # 読み仮名から注釈タグを除去
+                    reading_raw = match.group(2).strip()
+                    reading = re.sub(r'<ref.*?>.*?</ref>', '', reading_raw)
+                    
                     print(f"{kanji},{reading}")
 
 if __name__ == "__main__":
