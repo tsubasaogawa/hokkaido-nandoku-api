@@ -9,29 +9,29 @@
 - [x] T003: `data/nandoku_chimei.csv` にサンプルデータを3件以上追加する。
 
 ## Phase 3.2: Infrastructure as Code (Terraform)
-- [ ] T004: `terraform/variables.tf` を作成し、`aws_region`, `project_name` などの変数を定義する。
-- [ ] T005: `terraform/outputs.tf` を作成し、API GatewayのURLを出力するように定義する。
-- [ ] T006: `terraform/main.tf` を作成し、`terraform-aws-modules/lambda/aws` モジュールを使用して、ECRリポジトリ、Lambda関数、API Gatewayの定義を記述する。Lambdaのソースパスはプロジェクトルートを指定する。
+- [x] T004: `terraform/variables.tf` を作成し、`aws_region`, `project_name` などの変数を定義する。
+- [x] T005: `terraform/outputs.tf` を作成し、API GatewayのURLを出力するように定義する。
+- [x] T006: `terraform/main.tf` を作成し、`terraform-aws-modules/lambda/aws` モジュールを使用して、ECRリポジトリ、Lambda関数、API Gatewayの定義を記述する。Lambdaのソースパスはプロジェクトルートを指定する。
 
 ## Phase 3.3: 実装 (TDD)
 
 ### Core Logic & Data Layer
-- [ ] T007 [P]: `internal/model/placename.go` に `PlaceName` struct を定義する。
-- [ ] T008 [P]: `pkg/csvloader/loader_test.go` に、CSVファイルを正しく読み込めるかテストするユニットテストを記述する。
-- [ ] T009: T008のテストが失敗することを確認後、`pkg/csvloader/loader.go` にCSVファイルを読み込み `[]model.PlaceName` スライスを返す `LoadPlaceNames` 関数を実装する。
-- [ ] T010 [P]: `internal/repository/placename_repository_test.go` に、`FindRandom` メソッドがスライスからランダムな要素を1つ返すことを確認するユニットテストを記述する。
-- [ ] T011: T010のテストが失敗することを確認後、`internal/repository/placename_repository.go` に `PlaceNameRepository` インターフェースと、CSVローダーを利用する実装を記述する。
+- [x] T007 [P]: `internal/model/placename.go` に `PlaceName` struct を定義する。
+- [x] T008 [P]: `pkg/csvloader/loader_test.go` に、CSVファイルを正しく読み込めるかテストするユニットテストを記述する。
+- [x] T009: T008のテストが失敗することを確認後、`pkg/csvloader/loader.go` にCSVファイルを読み込み `[]model.PlaceName` スライスを返す `LoadPlaceNames` 関数を実装する。
+- [x] T010 [P]: `internal/repository/placename_repository_test.go` に、`FindRandom` メソッドがスライスからランダムな要素を1つ返すことを確認するユニットテストを記述する。
+- [x] T011: T010のテストが失敗することを確認後、`internal/repository/placename_repository.go` に `PlaceNameRepository` インターフェースと、CSVローダーを利用する実装を記述する。
 
 ### Handler & API Layer
-- [ ] T012 [P]: `internal/handler/handler_test.go` に、リポジトリから取得した地名を正しくJSONレスポンスとして返すことを確認するユニットテストを記述する (`httptest` を使用)。
-- [ ] T013: T012のテストが失敗することを確認後、`internal/handler/handler.go` に `RandomPlaceNameHandler` を実装する。
+- [x] T012 [P]: `internal/handler/handler_test.go` に、リポジトリから取得した地名を正しくJSONレスポンスとして返すことを確認するユニットテストを記述する (`httptest` を使用)。
+- [x] T013: T012のテストが失敗することを確認後、`internal/handler/handler.go` に `RandomPlaceNameHandler` を実装する。
 
 ### Application Entrypoint & Containerization
-- [ ] T014: `cmd/api/main.go` に、依存関係（リポジトリ、ハンドラ）を初期化し、Lambdaの実行を開始する `main` 関数を実装する。
-- [ ] T015 [P]: プロジェクトルートに `Dockerfile` を作成する。Goアプリケーションをビルドし、軽量なコンテナイメージ（例: `alpine` ベース）を構築する。
+- [x] T014: `cmd/api/main.go` に、依存関係（リポジトリ、ハンドラ）を初期化し、Lambdaの実行を開始する `main` 関数を実装する。
+- [x] T015 [P]: プロジェクトルートに `Dockerfile` を作成する。Goアプリケーションをビルドし、軽量なコンテナイメージ（例: `alpine` ベース）を構築する。
 
 ## Phase 3.4: 統合とデプロイ
-- [ ] T016: `tests/integration/api_test.go` に、`terraform apply` でデプロイされたエンドポイントに対して実際にHTTPリクエストを送り、200 OKレスポンスと期待されるJSON形式のボディが返ってくることを確認するインテグレーションテストを記述する。
+- [x] T016: `tests/integration/api_test.go` に、`terraform apply` でデプロイされたエンドポイントに対して実際にHTTPリクエストを送り、200 OKレスポンスと期待されるJSON形式のボディが返ってくることを確認するインテグレーションテストを記述する。
 - [ ] T017: `terraform apply` を実行し、AWSへのデプロイが成功することを確認する。
 - [ ] T018: T016のインテグレーションテストを実行し、パスすることを確認する。
 
