@@ -33,7 +33,7 @@ API利用者が北海道の難読地名をランダムに取得できるAPIを�
 **Primary Dependencies**: なし (標準ライブラリのみ)
 **Storage**: 同梱のCSVファイル
 **Testing**: `testing` 標準パッケージ
-**Target Platform**: AWS Lambda (Container Image) + Amazon API Gateway
+**Target Platform**: AWS Lambda (Go 1.x Runtime) + Amazon API Gateway
 **Infrastructure as Code**: Terraform (with `terraform-aws-modules/lambda`)
 **Project Type**: single
 **Performance Goals**: p99で200ms未満のレスポンスタイム

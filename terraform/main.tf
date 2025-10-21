@@ -17,18 +17,25 @@ module "lambda" {
 
   function_name = var.project_name
   description   = "A function to return a random difficult-to-read place name in Hokkaido."
-  package_type  = "Image"
-  image_uri     = module.ecr.repository_url
-  create_package = false
+  
+  package_type = "Zip"
+  runtime      = "go1.x"
+  handler      = "bootstrap"
+
+  source_path = "../"
+  
+  create_package = true
+  build_in_docker = true
+  patterns = [
+    "cmd/**",
+    "internal/**",
+    "pkg/**",
+    "data/**",
+    "go.mod",
+    "go.sum",
+  ]
 
   timeout = 10
-}
-
-module "ecr" {
-  source  = "terraform-aws-modules/ecr/aws"
-  version = "~> 1.6"
-
-  repository_name = var.project_name
 }
 
 resource "aws_apigatewayv2_api" "this" {

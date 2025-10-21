@@ -11,7 +11,7 @@
 ## Phase 3.2: Infrastructure as Code (Terraform)
 - [x] T004: `terraform/variables.tf` を作成し、`aws_region`, `project_name` などの変数を定義する。
 - [x] T005: `terraform/outputs.tf` を作成し、API GatewayのURLを出力するように定義する。
-- [x] T006: `terraform/main.tf` を作成し、`terraform-aws-modules/lambda/aws` モジュールを使用して、ECRリポジトリ、Lambda関数、API Gatewayの定義を記述する。Lambdaのソースパスはプロジェクトルートを指定する。
+- [x] T006: `terraform/main.tf` を作成し、`terraform-aws-modules/lambda/aws` モジュールを使用して、Goネイティブランタイム (`go1.x`) で動作するLambda関数とAPI Gatewayの定義を記述する。Terraformが自動でGoバイナリのビルドとZIP化を行うように設定する。
 
 ## Phase 3.3: 実装 (TDD)
 
@@ -26,9 +26,8 @@
 - [x] T012 [P]: `internal/handler/handler_test.go` に、リポジトリから取得した地名を正しくJSONレスポンスとして返すことを確認するユニットテストを記述する (`httptest` を使用)。
 - [x] T013: T012のテストが失敗することを確認後、`internal/handler/handler.go` に `RandomPlaceNameHandler` を実装する。
 
-### Application Entrypoint & Containerization
+### Application Entrypoint
 - [x] T014: `cmd/api/main.go` に、依存関係（リポジトリ、ハンドラ）を初期化し、Lambdaの実行を開始する `main` 関数を実装する。
-- [x] T015 [P]: プロジェクトルートに `Dockerfile` を作成する。Goアプリケーションをビルドし、軽量なコンテナイメージ（例: `alpine` ベース）を構築する。
 
 ## Phase 3.4: 統合とデプロイ
 - [x] T016: `tests/integration/api_test.go` に、`terraform apply` でデプロイされたエンドポイントに対して実際にHTTPリクエストを送り、200 OKレスポンスと期待されるJSON形式のボディが返ってくることを確認するインテグレーションテストを記述する。
@@ -56,7 +55,6 @@ Task: "T008 [P]: pkg/csvloader/loader_test.go に、CSVファイルを正しく�
 Task: "T010 [P]: internal/repository/placename_repository_test.go に、FindRandom メソッドがスライスからランダムな要素を1つ返すことを確認するユニットテストを記述する。"
 Task: "T012 [P]: internal/handler/handler_test.go に、リポジトリから取得した地名を正しくJSONレスポンスとして返すことを確認するユニットテストを記述する (`httptest` を使用)。"
 
-# インフラ定義とコンテナ定義
-Task: "T006: terraform/main.tf を作成し、terraform-aws-modules/lambda/aws モジュールを使用して、ECRリポジトリ、Lambda関数、API Gatewayの定義を記述する。"
-Task: "T015 [P]: プロジェクトルートに Dockerfile を作成する。"
+# インフラ定義
+Task: "T006: terraform/main.tf を作成し、terraform-aws-modules/lambda/aws モジュールを使用して、Goネイティブランタイム (`go1.x`) で動作するLambda関数とAPI Gatewayの定義を記述する。"
 ```

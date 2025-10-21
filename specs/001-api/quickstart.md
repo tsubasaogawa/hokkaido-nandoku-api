@@ -4,7 +4,6 @@
 
 ## 前提条件
 - Go (1.22 or later) がインストールされていること
-- Dockerがインストールされていること（コンテナビルドのため）
 
 ## 1. データファイルの準備
 プロジェクトルートに `data` ディレクトリを作成し、その中に `nandoku_chimei.csv` という名前で以下の形式のCSVファイルを配置します。
@@ -46,11 +45,10 @@ curl http://localhost:8080/random
 ```
 
 ## 5. AWSへのデプロイ (Terraform)
-Terraformを使用して、アプリケーションのコンテナイメージのビルドからAWSへのデプロイまでを一度に実行します。
+Terraformを使用して、GoアプリケーションのビルドからAWSへのデプロイまでを一度に実行します。
 
 ### 前提条件
 - Terraform (1.0 or later) がインストールされていること
-- Dockerがインストールされていること
 - AWS CLIがインストールされ、認証情報が設定済みであること
 
 ### 手順
@@ -65,7 +63,7 @@ Terraformを使用して、アプリケーションのコンテナイメージ�
    # 実行計画の確認
    terraform plan
 
-   # 適用（コンテナのビルドとデプロイが自動的に実行されます）
+   # 適用（GoバイナリのビルドとZIP化、デプロイが自動的に実行されます）
    terraform apply
    ```
 
@@ -77,5 +75,3 @@ Terraformを使用して、アプリケーションのコンテナイメージ�
    curl https://<api-gateway-id>.execute-api.ap-northeast-1.amazonaws.com/prod/random
    ```
    成功すれば、ローカルでの実行時と同様のJSONレスポンスが返ってきます。
-
-
