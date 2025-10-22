@@ -62,31 +62,29 @@ specs/001-api/
 ### Source Code (repository root)
 ```
 # Option 1: Single project (DEFAULT)
-cmd/
-└── api/
-    └── main.go
-internal/
-├── handler/
-├── model/
-└── repository/
-pkg/
-└── csvloader/
-
-tests/
-├── integration/
-└── unit/
-
-data/
-└── nandoku_chimei.csv
+source/
+├── cmd/
+│   └── api/
+│       └── main.go
+├── internal/
+│   ├── handler/
+│   ├── model/
+│   └── repository/
+├── pkg/
+│   └── csvloader/
+├── tests/
+│   ├── integration/
+│   └── unit/
+├── data/
+│   └── nandoku_chimei.csv
+├── build.sh
+├── go.mod
+└── go.sum
 
 terraform/
 ├── main.tf
 ├── variables.tf
 └── outputs.tf
-
-Dockerfile
-go.mod
-go.sum
 ```
 
 **Structure Decision**: Option 1: Single project
@@ -116,8 +114,8 @@ go.sum
 - CSVローダーパッケージ `csvloader` の実装タスクを作成する。
 - `internal` パッケージ（repository, handler）の実装タスクを作成する。
 - `cmd/api/main.go` の実装タスク（Lambdaハンドラのエントリポイント）を作成する。
-- `Dockerfile` の作成タスクを生成する。
-- `terraform/` ディレクトリに `terraform-aws-modules/lambda` を利用して、ECRリポジトリ作成、コンテナイメージのビルド、Lambda関数、API Gatewayのエンドポイントを含むAWSリソース一式を定義するTerraform設定ファイルの作成タスクを生成する。
+- GoバイナリとデータファイルをZIP化する `build.sh` スクリプトの作成タスクを生成する。
+- `terraform/` ディレクトリに `terraform-aws-modules/lambda` を利用して、Lambda関数とAPI Gatewayを定義するTerraform設定ファイルの作成タスクを生成する。Terraformはビルド済みのZIPファイルをデプロイする構成とする。
 - 各コンポーネントに対応するユニットテストの作成タスクを生成する。
 - `quickstart.md` に基づくインテグレーションテストのタスクを作成する。
 
