@@ -1,41 +1,64 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/awslabs/aws-lambda-go-api-proxy/httpadapter"
 	"github.com/t-ogawa/hokkaido-nandoku-api/internal/handler"
 	"github.com/t-ogawa/hokkaido-nandoku-api/internal/repository"
 	"github.com/t-ogawa/hokkaido-nandoku-api/pkg/csvloader"
 )
 
+var httpAdapter *httpadapter.HandlerAdapter
+var mux *http.ServeMux
+
+func init() {
+	log.Println("Initializing handler")
+	csvPath := "data/nandoku_chimei.csv"
+
+	// If running on Lambda, construct the absolute path to the data file
+	if taskRoot := os.Getenv("LAMBDA_TASK_ROOT"); taskRoot != "" {
+		csvPath = filepath.Join(taskRoot, "data/nandoku_chimei.csv")
+	}
+
+	placeNames, err := csvloader.LoadPlaceNames(csvPath)
+	if err != nil {
+		log.Fatalf("Failed to load place names from %s: %v", csvPath, err)
+	}
+
+	repo := repository.NewInMemoryPlaceNameRepository(placeNames)
+	h := handler.NewRandomPlaceNameHandler(repo)
+
+	mux = http.NewServeMux()
+	mux.Handle("/random", h)
+
+	httpAdapter = httpadapter.New(mux)
+}
+
 func main() {
-	// For AWS Lambda, the handler is executed directly.
-	// For local execution, we start a simple HTTP server.
 	if os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {
-		// Lambda execution is handled by the runtime, so we just need to register the handler.
-		// This part will be completed in a later task.
 		log.Println("Running on AWS Lambda")
+		lambda.Start(Handler)
 	} else {
 		log.Println("Running on local")
 		startLocalServer()
 	}
 }
 
+func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return httpAdapter.ProxyWithContext(ctx, req)
+}
+
 func startLocalServer() {
-	placeNames, err := csvloader.LoadPlaceNames("data/nandoku_chimei.csv")
-	if err != nil {
-		log.Fatalf("Failed to load place names: %v", err)
-	}
-
-	repo := repository.NewInMemoryPlaceNameRepository(placeNames)
-	h := handler.NewRandomPlaceNameHandler(repo)
-
-	http.Handle("/random", h)
-
+	// The handler is already initialized in init()
 	log.Println("Starting server on :8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":8080", mux); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
