@@ -22,11 +22,8 @@ module "lambda" {
   runtime      = "provided.al2023"
   handler      = "bootstrap"
 
-  source_path = "../source"
+  source_path = "../source/hokkaido-nandoku-api.zip"
   
-  create_package = true
-  build_in_docker = true
-
   timeout = 10
 }
 
