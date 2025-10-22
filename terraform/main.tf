@@ -19,21 +19,13 @@ module "lambda" {
   description   = "A function to return a random difficult-to-read place name in Hokkaido."
   
   package_type = "Zip"
-  runtime      = "go1.x"
+  runtime      = "provided.al2023"
   handler      = "bootstrap"
 
-  source_path = "../"
+  source_path = "../source"
   
   create_package = true
   build_in_docker = true
-  patterns = [
-    "cmd/**",
-    "internal/**",
-    "pkg/**",
-    "data/**",
-    "go.mod",
-    "go.sum",
-  ]
 
   timeout = 10
 }
