@@ -22,4 +22,9 @@ tests/
 - 001-api: Added
 
 <!-- MANUAL ADDITIONS START -->
+
+## コーディング上の注意点
+
+- Terraform module を利用・修正する場合は、まず module のインタフェースをドキュメントで確認してから行ってください。
+
 <!-- MANUAL ADDITIONS END -->
