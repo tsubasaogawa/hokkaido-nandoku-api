@@ -1,0 +1,22 @@
+openapi: 3.0.0
+info:
+  title: Hokkaido Nandoku API
+  version: 1.0.0
+paths:
+  /list:
+    get:
+      summary: Get a list of nandoku placenames
+      responses:
+        '200':
+          description: A list of placenames
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    yomi:
+                      type: string

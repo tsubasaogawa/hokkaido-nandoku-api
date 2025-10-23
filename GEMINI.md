@@ -4,6 +4,8 @@ Auto-generated from all feature plans. Last updated: 2025-09-25
 
 ## Active Technologies
 - (001-api)
+- Go 1.22 + AWS SDK for Go v2, Terraform (003-api-gateway-list)
+- N/A (データはCSVから読み込む) (003-api-gateway-list)
 
 ## Project Structure
 ```
@@ -19,6 +21,7 @@ tests/
 : Follow standard conventions
 
 ## Recent Changes
+- 003-api-gateway-list: Added Go 1.22 + AWS SDK for Go v2, Terraform
 - 001-api: Added
 
 <!-- MANUAL ADDITIONS START -->
