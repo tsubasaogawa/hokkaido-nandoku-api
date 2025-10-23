@@ -3,62 +3,46 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/t-ogawa/hokkaido-nandoku-api/internal/repository"
 )
 
-// RandomPlaceNameHandler is a handler for random place name.
-type RandomPlaceNameHandler struct {
+// Handler is a handler for place names.
+type Handler struct {
 	repo repository.PlaceNameRepository
 }
 
-// NewRandomPlaceNameHandler creates a new RandomPlaceNameHandler.
-func NewRandomPlaceNameHandler(repo repository.PlaceNameRepository) *RandomPlaceNameHandler {
-	return &RandomPlaceNameHandler{repo: repo}
+// NewHandler creates a new Handler.
+func NewHandler(repo repository.PlaceNameRepository) *Handler {
+	return &Handler{repo: repo}
 }
 
 // ServeHTTP handles the request.
-func (h *RandomPlaceNameHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	placeName, err := h.repo.FindRandom()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
+func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(placeName); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-}
 
-// PlaceNamesHandler is a handler for place names.
-type PlaceNamesHandler struct {
-	repo repository.PlaceNameRepository
-}
-
-// NewPlaceNamesHandler creates a new PlaceNamesHandler.
-func NewPlaceNamesHandler(repo repository.PlaceNameRepository) *PlaceNamesHandler {
-	return &PlaceNamesHandler{repo: repo}
-}
-
-// ListPlaceNames handles the request for listing all place names.
-func (h *PlaceNamesHandler) ListPlaceNames(w http.ResponseWriter, r *http.Request) {
-	placeNames, err := h.repo.FindAll()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	response := struct {
-		PlaceNames interface{} `json:"placenames"`
-	}{
-		PlaceNames: placeNames,
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	if strings.HasSuffix(r.URL.Path, "/list") {
+		placeNames, err := h.repo.FindAll()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if err := json.NewEncoder(w).Encode(placeNames); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	} else if strings.HasSuffix(r.URL.Path, "/random") {
+		placeName, err := h.repo.FindRandom()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if err := json.NewEncoder(w).Encode(placeName); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	} else {
+		http.NotFound(w, r)
 	}
 }

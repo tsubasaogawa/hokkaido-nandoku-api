@@ -89,15 +89,13 @@ func TestPlaceNamesHandler_ListPlaceNames(t *testing.T) {
 			t.Errorf("expected status code %d, but got %d", http.StatusOK, rec.Code)
 		}
 
-		var res struct {
-			PlaceNames []model.PlaceName `json:"placenames"`
-		}
+		var res []model.PlaceName
 		if err := json.NewDecoder(rec.Body).Decode(&res); err != nil {
 			t.Fatalf("failed to decode response body: %v", err)
 		}
 
-		if !reflect.DeepEqual(res.PlaceNames, expectedPlaceNames) {
-			t.Errorf("expected %+v, but got %+v", expectedPlaceNames, res.PlaceNames)
+		if !reflect.DeepEqual(res, expectedPlaceNames) {
+			t.Errorf("expected %+v, but got %+v", expectedPlaceNames, res)
 		}
 	})
 
