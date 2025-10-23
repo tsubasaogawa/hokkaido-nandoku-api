@@ -23,12 +23,12 @@
 - [X] T005: [Build] アプリケーションをビルドし、ローカルでテストする。
     - **File**: `source/build.sh`
     - **Details**: `build.sh` を実行してGoアプリケーションをビルドし、Dockerコンテナを起動して `curl` コマンドでローカルエンドポイントの動作を確認します。
-- [ ] T006: [Deploy] Terraformの変更を適用する。
+- [X] T006: [Deploy] Terraformの変更を適用する。
     - **Directory**: `terraform/`
     - **Details**: `terraform apply` を実行して、API Gatewayの変更をAWSにデプロイします。
 
 ## Phase 3.4: Validation
-- [ ] T007: デプロイされた`/list`エンドポイントをテストする。
+- [X] T007: デプロイされた`/list`エンドポイントをテストする。
     - **Details**: `terraform output` からAPI GatewayのURLを取得し、`curl <URL>/list` を実行して、地名リストが正しく返されることを確認します。
 
 ## Dependencies
