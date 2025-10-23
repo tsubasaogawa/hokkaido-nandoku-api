@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	"github.com/t-ogawa/hokkaido-nandoku-api/internal/model"
@@ -12,12 +13,17 @@ import (
 
 // mockPlaceNameRepository is a mock implementation of PlaceNameRepository for testing.
 type mockPlaceNameRepository struct {
-	placeName model.PlaceName
-	err       error
+	placeName  model.PlaceName
+	placeNames []model.PlaceName
+	err        error
 }
 
 func (m *mockPlaceNameRepository) FindRandom() (model.PlaceName, error) {
 	return m.placeName, m.err
+}
+
+func (m *mockPlaceNameRepository) FindAll() ([]model.PlaceName, error) {
+	return m.placeNames, m.err
 }
 
 func TestRandomPlaceNameHandler(t *testing.T) {
@@ -56,6 +62,55 @@ func TestRandomPlaceNameHandler(t *testing.T) {
 		rec := httptest.NewRecorder()
 
 		handler.ServeHTTP(rec, req)
+
+		if rec.Code != http.StatusInternalServerError {
+			t.Errorf("expected status code %d, but got %d", http.StatusInternalServerError, rec.Code)
+		}
+	})
+}
+
+func TestPlaceNamesHandler_ListPlaceNames(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		expectedPlaceNames := []model.PlaceName{
+			{Name: "test1", Yomi: "yomi1"},
+			{Name: "test2", Yomi: "yomi2"},
+		}
+		repo := &mockPlaceNameRepository{
+			placeNames: expectedPlaceNames,
+		}
+		handler := NewPlaceNamesHandler(repo)
+
+		req := httptest.NewRequest(http.MethodGet, "/list", nil)
+		rec := httptest.NewRecorder()
+
+		handler.ListPlaceNames(rec, req)
+
+		if rec.Code != http.StatusOK {
+			t.Errorf("expected status code %d, but got %d", http.StatusOK, rec.Code)
+		}
+
+		var res struct {
+			PlaceNames []model.PlaceName `json:"placenames"`
+		}
+		if err := json.NewDecoder(rec.Body).Decode(&res); err != nil {
+			t.Fatalf("failed to decode response body: %v", err)
+		}
+
+		if !reflect.DeepEqual(res.PlaceNames, expectedPlaceNames) {
+			t.Errorf("expected %+v, but got %+v", expectedPlaceNames, res.PlaceNames)
+		}
+	})
+
+	t.Run("error", func(t *testing.T) {
+		repo := &mockPlaceNameRepository{
+			err: errors.New("test error"),
+		}
+		handler := NewPlaceNamesHandler(repo)
+
+		req := httptest.NewRequest(http.MethodGet, "/list", nil)
+		rec := httptest.NewRecorder()
+
+		handler.ListPlaceNames(rec, req)
 
 		if rec.Code != http.StatusInternalServerError {
 			t.Errorf("expected status code %d, but got %d", http.StatusInternalServerError, rec.Code)

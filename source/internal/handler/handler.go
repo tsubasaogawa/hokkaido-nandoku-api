@@ -31,3 +31,34 @@ func (h *RandomPlaceNameHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 		return
 	}
 }
+
+// PlaceNamesHandler is a handler for place names.
+type PlaceNamesHandler struct {
+	repo repository.PlaceNameRepository
+}
+
+// NewPlaceNamesHandler creates a new PlaceNamesHandler.
+func NewPlaceNamesHandler(repo repository.PlaceNameRepository) *PlaceNamesHandler {
+	return &PlaceNamesHandler{repo: repo}
+}
+
+// ListPlaceNames handles the request for listing all place names.
+func (h *PlaceNamesHandler) ListPlaceNames(w http.ResponseWriter, r *http.Request) {
+	placeNames, err := h.repo.FindAll()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	response := struct {
+		PlaceNames interface{} `json:"placenames"`
+	}{
+		PlaceNames: placeNames,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
