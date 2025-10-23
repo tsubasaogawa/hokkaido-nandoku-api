@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  title: 北海道難読地名API
+  description: 北海道の難読地名をランダムに1件返すAPIです。
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+    description: 本番環境
+paths:
+  /random:
+    get:
+      summary: 難読地名をランダムに1件取得
+      description: 北海道の難読地名と読みがなのペアをランダムに1件返します。
+      operationId: getRandomPlaceName
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceName'
+        '429':
+          description: リクエスト過多
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: サーバー内部エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    PlaceName:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 地名の漢字表記
+          example: "長万部"
+        yomi:
+          type: string
+          description: 地名の読みがな（ひらがな）
+          example: "おしゃまんべ"
+      required:
+        - name
+        - yomi
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: エラーメッセージ
+      required:
+        - message

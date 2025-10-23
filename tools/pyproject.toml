@@ -1,0 +1,26 @@
+[project]
+name = "tools"
+version = "0.1.0"
+description = "Add your description here"
+authors = [{ name = "You", email = "you@example.com" }]
+dependencies = [
+    "SPARQLWrapper>=2.0.0",
+    "requests>=2.32.3",
+    "beautifulsoup4>=4.12.3",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build]
+packages = ["."]
