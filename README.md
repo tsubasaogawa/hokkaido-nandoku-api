@@ -74,6 +74,7 @@ curl http://localhost:8080/random
     "name": "国縫",
     "yomi": "くんぬい"
   }
+ :
 ]
 ```
 
