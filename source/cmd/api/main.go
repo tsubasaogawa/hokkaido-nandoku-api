@@ -33,12 +33,10 @@ func init() {
 	}
 
 	repo := repository.NewInMemoryPlaceNameRepository(placeNames)
-	randomHandler := handler.NewRandomPlaceNameHandler(repo)
-	placeNamesHandler := handler.NewPlaceNamesHandler(repo)
+	newHandler := handler.NewHandler(repo)
 
 	mux = http.NewServeMux()
-	mux.Handle("/random", randomHandler)
-	mux.HandleFunc("/list", placeNamesHandler.ListPlaceNames)
+	mux.Handle("/", newHandler)
 
 	httpAdapter = httpadapter.New(mux)
 }

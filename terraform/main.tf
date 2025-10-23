@@ -50,9 +50,15 @@ resource "aws_apigatewayv2_integration" "this" {
   integration_uri  = module.lambda.lambda_function_arn
 }
 
-resource "aws_apigatewayv2_route" "this" {
+resource "aws_apigatewayv2_route" "random" {
   api_id    = aws_apigatewayv2_api.this.id
   route_key = "GET /random"
+  target    = "integrations/${aws_apigatewayv2_integration.this.id}"
+}
+
+resource "aws_apigatewayv2_route" "list" {
+  api_id    = aws_apigatewayv2_api.this.id
+  route_key = "GET /list"
   target    = "integrations/${aws_apigatewayv2_integration.this.id}"
 }
 
