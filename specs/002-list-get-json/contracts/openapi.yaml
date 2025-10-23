@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: Hokkaido Nandoku API
+  version: 1.0.0
+  description: An API to get information about difficult-to-read place names in Hokkaido.
+paths:
+  /list:
+    get:
+      summary: Get a list of all place names
+      description: Returns a complete list of difficult-to-read place names in Hokkaido and their readings.
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  placenames:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Placename'
+components:
+  schemas:
+    Placename:
+      type: object
+      required:
+        - name
+        - yomi
+      properties:
+        name:
+          type: string
+          description: The official name of the place.
+          example: "支笏湖"
+        yomi:
+          type: string
+          description: The phonetic reading of the name in hiragana.
+          example: "しこつこ"
