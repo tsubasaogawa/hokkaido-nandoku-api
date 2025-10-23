@@ -11,6 +11,7 @@ import (
 // PlaceNameRepository is an interface for place name repository.
 type PlaceNameRepository interface {
 	FindRandom() (model.PlaceName, error)
+	FindAll() ([]model.PlaceName, error)
 }
 
 // inMemoryPlaceNameRepository is an in-memory implementation of PlaceNameRepository.
@@ -33,4 +34,9 @@ func (r *inMemoryPlaceNameRepository) FindRandom() (model.PlaceName, error) {
 		return model.PlaceName{}, errors.New("no place names available")
 	}
 	return r.placeNames[r.rand.Intn(len(r.placeNames))], nil
+}
+
+// FindAll returns all place names.
+func (r *inMemoryPlaceNameRepository) FindAll() ([]model.PlaceName, error) {
+	return r.placeNames, nil
 }
