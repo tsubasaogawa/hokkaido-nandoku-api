@@ -1,0 +1,40 @@
+# OS and Editor files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# Sensitive files
+*.env
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*_rsa
+*_dsa
+*_ecdsa
+*_ed25519
+secrets.yml
+secrets.yaml
+credentials.yml
+credentials.yaml
+*.p12
+*.pfx
+
+# AWS and Cloud Provider credentials
+.aws/credentials
+terraform.tfvars
+*.tfvars
+!terraform.tfvars.example
