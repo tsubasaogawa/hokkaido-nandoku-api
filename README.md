@@ -6,6 +6,8 @@
 
 このガイドは、APIをローカル環境でビルドし、実行するための手順を説明します。
 
+![Architecture](./architecture.svg)
+
 ### 前提条件
 - Go (1.22 or later) がインストールされていること
 
