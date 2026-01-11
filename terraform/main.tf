@@ -11,20 +11,25 @@ provider "aws" {
   region = var.aws_region
 }
 
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
+}
+
 module "lambda" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "~> 7.0"
 
   function_name = var.project_name
   description   = "A function to return a random difficult-to-read place name in Hokkaido."
-  
+
   package_type = "Zip"
   runtime      = "provided.al2023"
   handler      = "bootstrap"
 
   create_package         = false
   local_existing_package = "../source/hokkaido-nandoku-api.zip"
-  
+
   timeout = 10
 }
 
