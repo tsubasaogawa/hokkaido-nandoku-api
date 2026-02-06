@@ -22,9 +22,9 @@ func TestLoadPlaceNames(t *testing.T) {
 	}
 	defer csvFile.Close()
 
-	csvData := `name,yomi
-test1,yomi1
-test2,yomi2
+	csvData := `id,name,yomi
+1,test1,yomi1
+2,test2,yomi2
 `
 	if _, err := csvFile.WriteString(csvData); err != nil {
 		t.Fatalf("Failed to write to temp file: %v", err)
@@ -37,8 +37,8 @@ test2,yomi2
 	}
 
 	expected := []model.PlaceName{
-		{Name: "test1", Yomi: "yomi1"},
-		{Name: "test2", Yomi: "yomi2"},
+		{ID: 1, Name: "test1", Yomi: "yomi1"},
+		{ID: 2, Name: "test2", Yomi: "yomi2"},
 	}
 
 	if len(placeNames) != len(expected) {
@@ -46,7 +46,7 @@ test2,yomi2
 	}
 
 	for i, p := range placeNames {
-		if p.Name != expected[i].Name || p.Yomi != expected[i].Yomi {
+		if p.ID != expected[i].ID || p.Name != expected[i].Name || p.Yomi != expected[i].Yomi {
 			t.Errorf("Expected %+v, but got %+v", expected[i], p)
 		}
 	}
