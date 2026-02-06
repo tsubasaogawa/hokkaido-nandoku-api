@@ -129,64 +129,64 @@ func TestPlaceNamesHandler_ListPlaceNames(t *testing.T) {
 }
 
 func TestHandler_GetPlaceNameByID(t *testing.T) {
-t.Run("success", func(t *testing.T) {
-expectedPlaceNames := []model.PlaceName{
-{ID: 1, Name: "test1", Yomi: "yomi1"},
-{ID: 2, Name: "test2", Yomi: "yomi2"},
-}
-repo := &mockPlaceNameRepository{
-placeNames: expectedPlaceNames,
-}
-handler := NewHandler(repo)
+	t.Run("success", func(t *testing.T) {
+		expectedPlaceNames := []model.PlaceName{
+			{ID: 1, Name: "test1", Yomi: "yomi1"},
+			{ID: 2, Name: "test2", Yomi: "yomi2"},
+		}
+		repo := &mockPlaceNameRepository{
+			placeNames: expectedPlaceNames,
+		}
+		handler := NewHandler(repo)
 
-req := httptest.NewRequest(http.MethodGet, "/id/1", nil)
-rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/id/1", nil)
+		rec := httptest.NewRecorder()
 
-handler.ServeHTTP(rec, req)
+		handler.ServeHTTP(rec, req)
 
-if rec.Code != http.StatusOK {
-t.Errorf("expected status code %d, but got %d", http.StatusOK, rec.Code)
-}
+		if rec.Code != http.StatusOK {
+			t.Errorf("expected status code %d, but got %d", http.StatusOK, rec.Code)
+		}
 
-var res model.PlaceName
-if err := json.NewDecoder(rec.Body).Decode(&res); err != nil {
-t.Fatalf("failed to decode response body: %v", err)
-}
+		var res model.PlaceName
+		if err := json.NewDecoder(rec.Body).Decode(&res); err != nil {
+			t.Fatalf("failed to decode response body: %v", err)
+		}
 
-if !reflect.DeepEqual(res, expectedPlaceNames[0]) {
-t.Errorf("expected %+v, but got %+v", expectedPlaceNames[0], res)
-}
-})
+		if !reflect.DeepEqual(res, expectedPlaceNames[0]) {
+			t.Errorf("expected %+v, but got %+v", expectedPlaceNames[0], res)
+		}
+	})
 
-t.Run("not found", func(t *testing.T) {
-repo := &mockPlaceNameRepository{
-placeNames: []model.PlaceName{
-{ID: 1, Name: "test1", Yomi: "yomi1"},
-},
-}
-handler := NewHandler(repo)
+	t.Run("not found", func(t *testing.T) {
+		repo := &mockPlaceNameRepository{
+			placeNames: []model.PlaceName{
+				{ID: 1, Name: "test1", Yomi: "yomi1"},
+			},
+		}
+		handler := NewHandler(repo)
 
-req := httptest.NewRequest(http.MethodGet, "/id/999", nil)
-rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/id/999", nil)
+		rec := httptest.NewRecorder()
 
-handler.ServeHTTP(rec, req)
+		handler.ServeHTTP(rec, req)
 
-if rec.Code != http.StatusNotFound {
-t.Errorf("expected status code %d, but got %d", http.StatusNotFound, rec.Code)
-}
-})
+		if rec.Code != http.StatusNotFound {
+			t.Errorf("expected status code %d, but got %d", http.StatusNotFound, rec.Code)
+		}
+	})
 
-t.Run("invalid id", func(t *testing.T) {
-repo := &mockPlaceNameRepository{}
-handler := NewHandler(repo)
+	t.Run("invalid id", func(t *testing.T) {
+		repo := &mockPlaceNameRepository{}
+		handler := NewHandler(repo)
 
-req := httptest.NewRequest(http.MethodGet, "/id/invalid", nil)
-rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/id/invalid", nil)
+		rec := httptest.NewRecorder()
 
-handler.ServeHTTP(rec, req)
+		handler.ServeHTTP(rec, req)
 
-if rec.Code != http.StatusBadRequest {
-t.Errorf("expected status code %d, but got %d", http.StatusBadRequest, rec.Code)
-}
-})
+		if rec.Code != http.StatusBadRequest {
+			t.Errorf("expected status code %d, but got %d", http.StatusBadRequest, rec.Code)
+		}
+	})
 }

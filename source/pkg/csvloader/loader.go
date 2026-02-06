@@ -18,7 +18,7 @@ func LoadPlaceNames(filePath string) ([]model.PlaceName, error) {
 
 	reader := csv.NewReader(file)
 	reader.FieldsPerRecord = 3 // id, name, yomi
-	
+
 	// Skip header
 	if _, err := reader.Read(); err != nil {
 		return nil, err
