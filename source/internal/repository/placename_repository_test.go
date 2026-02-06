@@ -9,8 +9,8 @@ import (
 
 func TestInMemoryPlaceNameRepository_FindRandom(t *testing.T) {
 	placeNames := []model.PlaceName{
-		{Name: "test1", Yomi: "yomi1"},
-		{Name: "test2", Yomi: "yomi2"},
+		{ID: 1, Name: "test1", Yomi: "yomi1"},
+		{ID: 2, Name: "test2", Yomi: "yomi2"},
 	}
 	repo := NewInMemoryPlaceNameRepository(placeNames)
 
@@ -21,7 +21,7 @@ func TestInMemoryPlaceNameRepository_FindRandom(t *testing.T) {
 
 	found := false
 	for _, p := range placeNames {
-		if p.Name == randomPlace.Name && p.Yomi == randomPlace.Yomi {
+		if p.ID == randomPlace.ID && p.Name == randomPlace.Name && p.Yomi == randomPlace.Yomi {
 			found = true
 			break
 		}
@@ -43,8 +43,8 @@ func TestInMemoryPlaceNameRepository_FindRandom_Empty(t *testing.T) {
 func TestInMemoryPlaceNameRepository_FindAll(t *testing.T) {
 	t.Run("returns all place names when repository is not empty", func(t *testing.T) {
 		placeNames := []model.PlaceName{
-			{Name: "test1", Yomi: "yomi1"},
-			{Name: "test2", Yomi: "yomi2"},
+			{ID: 1, Name: "test1", Yomi: "yomi1"},
+			{ID: 2, Name: "test2", Yomi: "yomi2"},
 		}
 		repo := NewInMemoryPlaceNameRepository(placeNames)
 
@@ -67,6 +67,38 @@ func TestInMemoryPlaceNameRepository_FindAll(t *testing.T) {
 
 		if len(allPlaceNames) != 0 {
 			t.Errorf("Expected an empty slice, but got %+v", allPlaceNames)
+		}
+	})
+}
+
+func TestInMemoryPlaceNameRepository_FindByID(t *testing.T) {
+	t.Run("returns place name when ID exists", func(t *testing.T) {
+		placeNames := []model.PlaceName{
+			{ID: 1, Name: "test1", Yomi: "yomi1"},
+			{ID: 2, Name: "test2", Yomi: "yomi2"},
+		}
+		repo := NewInMemoryPlaceNameRepository(placeNames)
+
+		placeName, err := repo.FindByID(1)
+		if err != nil {
+			t.Fatalf("FindByID failed: %v", err)
+		}
+
+		expected := placeNames[0]
+		if !reflect.DeepEqual(placeName, expected) {
+			t.Errorf("Expected %+v, got %+v", expected, placeName)
+		}
+	})
+
+	t.Run("returns error when ID does not exist", func(t *testing.T) {
+		placeNames := []model.PlaceName{
+			{ID: 1, Name: "test1", Yomi: "yomi1"},
+		}
+		repo := NewInMemoryPlaceNameRepository(placeNames)
+
+		_, err := repo.FindByID(999)
+		if err == nil {
+			t.Fatal("Expected an error for non-existent ID, but got nil")
 		}
 	})
 }

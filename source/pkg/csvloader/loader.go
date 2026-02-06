@@ -3,6 +3,7 @@ package csvloader
 import (
 	"encoding/csv"
 	"os"
+	"strconv"
 
 	"github.com/t-ogawa/hokkaido-nandoku-api/internal/model"
 )
@@ -16,7 +17,7 @@ func LoadPlaceNames(filePath string) ([]model.PlaceName, error) {
 	defer file.Close()
 
 	reader := csv.NewReader(file)
-	reader.FieldsPerRecord = 2 // name, yomi
+	reader.FieldsPerRecord = 3 // id, name, yomi
 	
 	// Skip header
 	if _, err := reader.Read(); err != nil {
@@ -30,9 +31,14 @@ func LoadPlaceNames(filePath string) ([]model.PlaceName, error) {
 
 	placeNames := make([]model.PlaceName, 0, len(records))
 	for _, record := range records {
+		id, err := strconv.Atoi(record[0])
+		if err != nil {
+			return nil, err
+		}
 		placeNames = append(placeNames, model.PlaceName{
-			Name: record[0],
-			Yomi: record[1],
+			ID:   id,
+			Name: record[1],
+			Yomi: record[2],
 		})
 	}
 

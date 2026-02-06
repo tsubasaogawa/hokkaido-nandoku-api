@@ -12,6 +12,7 @@ import (
 type PlaceNameRepository interface {
 	FindRandom() (model.PlaceName, error)
 	FindAll() ([]model.PlaceName, error)
+	FindByID(id int) (model.PlaceName, error)
 }
 
 // inMemoryPlaceNameRepository is an in-memory implementation of PlaceNameRepository.
@@ -39,4 +40,14 @@ func (r *inMemoryPlaceNameRepository) FindRandom() (model.PlaceName, error) {
 // FindAll returns all place names.
 func (r *inMemoryPlaceNameRepository) FindAll() ([]model.PlaceName, error) {
 	return r.placeNames, nil
+}
+
+// FindByID returns a place name by ID.
+func (r *inMemoryPlaceNameRepository) FindByID(id int) (model.PlaceName, error) {
+	for _, placeName := range r.placeNames {
+		if placeName.ID == id {
+			return placeName, nil
+		}
+	}
+	return model.PlaceName{}, errors.New("place name not found")
 }
