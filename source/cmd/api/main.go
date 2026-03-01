@@ -36,6 +36,7 @@ func init() {
 	newHandler := handler.NewHandler(repo)
 
 	mux = http.NewServeMux()
+	mux.Handle("/v1/", http.StripPrefix("/v1", newHandler))
 	mux.Handle("/", newHandler)
 
 	httpAdapter = httpadapter.New(mux)

@@ -56,9 +56,33 @@ resource "aws_apigatewayv2_route" "random" {
   target    = "integrations/${aws_apigatewayv2_integration.this.id}"
 }
 
+resource "aws_apigatewayv2_route" "random_v1" {
+  api_id    = aws_apigatewayv2_api.this.id
+  route_key = "GET /v1/random"
+  target    = "integrations/${aws_apigatewayv2_integration.this.id}"
+}
+
 resource "aws_apigatewayv2_route" "list" {
   api_id    = aws_apigatewayv2_api.this.id
   route_key = "GET /list"
+  target    = "integrations/${aws_apigatewayv2_integration.this.id}"
+}
+
+resource "aws_apigatewayv2_route" "list_v1" {
+  api_id    = aws_apigatewayv2_api.this.id
+  route_key = "GET /v1/list"
+  target    = "integrations/${aws_apigatewayv2_integration.this.id}"
+}
+
+resource "aws_apigatewayv2_route" "id" {
+  api_id    = aws_apigatewayv2_api.this.id
+  route_key = "GET /id/{id}"
+  target    = "integrations/${aws_apigatewayv2_integration.this.id}"
+}
+
+resource "aws_apigatewayv2_route" "id_v1" {
+  api_id    = aws_apigatewayv2_api.this.id
+  route_key = "GET /v1/id/{id}"
   target    = "integrations/${aws_apigatewayv2_integration.this.id}"
 }
 
