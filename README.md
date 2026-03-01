@@ -35,7 +35,7 @@ go build -o bootstrap ./cmd/api
 別のターミナルから `curl` コマンドを使ってAPIにリクエストを送信し、動作を確認します。
 
 ```bash
-curl http://localhost:8080/random
+curl http://localhost:8080/v1/random
 ```
 
 成功すると、以下のようなJSONレスポンスが返却されます。
@@ -45,7 +45,11 @@ curl http://localhost:8080/random
 
 ## API Routes
 
-### GET /random
+> [!NOTE]
+> 現在、すべてのエンドポイントは `/v1` プレフィックスをサポートしています。
+> 旧来のプレフィックスなしのエンドポイント（例: `/random`）も引き続き利用可能ですが、新しい開発では `/v1` を使用することを推奨します。
+
+### GET /v1/random
 
 ランダムに選ばれた北海道の難読地名とその読みを返します。
 
@@ -57,7 +61,7 @@ curl http://localhost:8080/random
 }
 ```
 
-### GET /list
+### GET /v1/list
 
 北海道の難読地名とその読みの一覧を返します。
 
@@ -79,7 +83,7 @@ curl http://localhost:8080/random
  ]
 ```
 
-### GET /id/{id}
+### GET /v1/id/{id}
 
 指定されたIDの北海道の難読地名とその読みを返します。
 
@@ -149,6 +153,6 @@ Terraformを使用して、GoアプリケーションのビルドからAWSへの
 3. **デプロイされたAPIの動作確認**
    出力されたエンドポイントURLに対して `curl` でリクエストを送信します。
    ```bash
-   curl https://<api-gateway-id>.execute-api.ap-northeast-1.amazonaws.com/random
+   curl https://<api-gateway-id>.execute-api.ap-northeast-1.amazonaws.com/v1/random
    ```
    成功すれば、ローカルでの実行時と同様のJSONレスポンスが返ってきます。
