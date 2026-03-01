@@ -76,9 +76,41 @@ curl http://localhost:8080/random
     "name": "国縫",
     "yomi": "くんぬい"
   }
- :
-]
+ ]
 ```
+
+### GET /id/{id}
+
+指定されたIDの北海道の難読地名とその読みを返します。
+
+**レスポンスサンプル:**
+```json
+{
+  "id": 1,
+  "name": "足寄",
+  "yomi": "あしょろ"
+}
+```
+
+## プロジェクト構成
+
+```text
+.
+├── source/          # APIサーバーのソースコード (Go)
+│   ├── cmd/api/     # エントリポイント
+│   ├── internal/    # 内部ロジック (handler, repository, model)
+│   └── data/        # 地名データ (CSV)
+├── terraform/       # インフラ定義 (AWS/Terraform)
+├── tools/           # 補助ツール (データ生成スクリプト等)
+└── architecture.svg # アーキテクチャ図
+```
+
+## ツール
+
+`tools/` ディレクトリには、地名データを更新するためのスクリプトが含まれています。
+
+### 地名データの生成
+`generate_hokkaido_nandoku_list.py` を使用して、Wikipediaから最新の難読地名リストを取得できます。詳細は [tools/README.md](./tools/README.md) を参照してください。
 
 ## AWSへのデプロイ (Terraform)
 Terraformを使用して、GoアプリケーションのビルドからAWSへのデプロイまでを実行します。
