@@ -37,6 +37,10 @@ components:
     PlaceName:
       type: object
       properties:
+        id:
+          type: integer
+          description: 地名のID
+          example: 1
         name:
           type: string
           description: 地名の漢字表記
@@ -46,6 +50,7 @@ components:
           description: 地名の読みがな（ひらがな）
           example: "おしゃまんべ"
       required:
+        - id
         - name
         - yomi
     Error:

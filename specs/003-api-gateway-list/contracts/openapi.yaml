@@ -15,7 +15,15 @@ paths:
                 type: array
                 items:
                   type: object
+                  required:
+                    - id
+                    - name
+                    - yomi
                   properties:
+                    id:
+                      type: integer
+                      description: The unique identifier of the place.
+                      example: 1
                     name:
                       type: string
                     yomi:

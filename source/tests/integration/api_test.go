@@ -31,8 +31,8 @@ func TestAPIGatewayIntegration(t *testing.T) {
 			t.Fatalf("Failed to decode response body: %v", err)
 		}
 
-		if placeName.Name == "" || placeName.Yomi == "" {
-			t.Errorf("Expected non-empty name and yomi, but got %+v", placeName)
+		if placeName.ID == 0 || placeName.Name == "" || placeName.Yomi == "" {
+			t.Errorf("Expected non-empty id, name and yomi, but got %+v", placeName)
 		}
 	})
 
@@ -47,20 +47,18 @@ func TestAPIGatewayIntegration(t *testing.T) {
 			t.Fatalf("Expected status code %d, but got %d", http.StatusOK, resp.StatusCode)
 		}
 
-		var body struct {
-			PlaceNames []model.PlaceName `json:"placenames"`
-		}
-		if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
+		var placeNames []model.PlaceName
+		if err := json.NewDecoder(resp.Body).Decode(&placeNames); err != nil {
 			t.Fatalf("Failed to decode response body: %v", err)
 		}
 
-		if len(body.PlaceNames) == 0 {
+		if len(placeNames) == 0 {
 			t.Error("Expected a non-empty list of place names, but got an empty list")
 		}
 
-		for _, p := range body.PlaceNames {
-			if p.Name == "" || p.Yomi == "" {
-				t.Errorf("Expected non-empty name and yomi, but got %+v", p)
+		for _, p := range placeNames {
+			if p.ID == 0 || p.Name == "" || p.Yomi == "" {
+				t.Errorf("Expected non-empty id, name and yomi, but got %+v", p)
 			}
 		}
 	})

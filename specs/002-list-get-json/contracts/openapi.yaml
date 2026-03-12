@@ -25,9 +25,14 @@ components:
     Placename:
       type: object
       required:
+        - id
         - name
         - yomi
       properties:
+        id:
+          type: integer
+          description: The unique identifier of the place.
+          example: 1
         name:
           type: string
           description: The official name of the place.
