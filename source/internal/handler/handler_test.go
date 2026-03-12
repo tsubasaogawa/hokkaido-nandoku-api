@@ -59,7 +59,7 @@ func TestRandomPlaceNameHandler(t *testing.T) {
 			t.Fatalf("failed to decode response body: %v", err)
 		}
 
-		if res.Name != "test" || res.Yomi != "yomi" {
+		if res.ID != 1 || res.Name != "test" || res.Yomi != "yomi" {
 			t.Errorf("expected %+v, but got %+v", repo.placeName, res)
 		}
 	})
